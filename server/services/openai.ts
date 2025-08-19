@@ -48,9 +48,16 @@ Respond with ONLY the reply text, no quotes, no extra formatting.`;
     }
 
     return reply;
-  } catch (error) {
+  } catch (error: any) {
     console.error("OpenAI API error:", error);
-    throw new Error("Failed to generate reply. Please try again.");
+    
+    if (error.status === 429) {
+      throw new Error("Oops! Message Guru is taking a nap due to high usage. Please try again in a few minutes or check your OpenAI account billing.");
+    } else if (error.status === 401) {
+      throw new Error("Authentication error. Please check your OpenAI API key.");
+    } else {
+      throw new Error("Oops! Message Guru is taking a nap. Try again!");
+    }
   }
 }
 
