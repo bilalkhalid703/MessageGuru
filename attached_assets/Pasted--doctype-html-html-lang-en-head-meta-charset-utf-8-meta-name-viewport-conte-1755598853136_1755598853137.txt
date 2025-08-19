@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Reply Baba — Smart Replies, Desi Vibes</title>
+  <meta name="description" content="Paste any message. Pick who it's from and a mood. Get instant, copy‑ready replies. Free. No sign‑up." />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='0.9em' font-size='90'%3E💬%3C/text%3E%3C/svg%3E" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Minimal enhancements */
+    .glass{backdrop-filter:saturate(180%) blur(12px);}
+  </style>
+</head>
+<body class="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100 text-slate-800">
+  <!-- Header -->
+  <header class="sticky top-0 z-20 bg-white/70 glass border-b border-slate-200">
+    <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <span class="text-2xl">💬</span>
+        <h1 class="text-xl sm:text-2xl font-bold tracking-tight">Reply <span class="text-indigo-600">Baba</span></h1>
+      </div>
+      <p class="text-xs sm:text-sm text-slate-500">Free • No sign‑up • Copy in one click</p>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <main class="max-w-5xl mx-auto p-4 sm:p-6">
+    <!-- Hero Card -->
+    <section class="rounded-2xl bg-white shadow-sm border border-slate-200 p-4 sm:p-6">
+      <div class="flex flex-col sm:flex-row gap-6 items-start">
+        <div class="flex-1">
+          <h2 class="text-2xl sm:text-3xl font-semibold leading-tight">Stuck on a text? Paste it. Pick the vibe. <span class="text-indigo-600">Get the perfect reply.</span></h2>
+          <p class="mt-2 text-slate-600 text-sm sm:text-base">Works for crushes, friends, family, and work. Choose a mood like <em>funny</em>, <em>romantic</em>, or <em>serious</em>, and Reply Baba crafts copy‑ready answers.</p>
+        </div>
+        <div class="shrink-0 w-full sm:w-52">
+          <div class="bg-indigo-50 border border-indigo-100 rounded-xl p-4 text-sm">
+            <p class="font-medium mb-1">How it works</p>
+            <ol class="list-decimal ml-4 space-y-1 text-slate-600">
+              <li>Paste incoming message</li>
+              <li>Select <strong>Who</strong> and <strong>Mood</strong></li>
+              <li>Hit <strong>Generate</strong> → Copy</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+
+      <!-- Form -->
+      <form id="replyForm" class="mt-6 space-y-4">
+        <label for="inputMsg" class="block text-sm font-medium text-slate-700">Incoming message</label>
+        <textarea id="inputMsg" required rows="4" placeholder="e.g., Why didn’t you call me last night?" class="w-full rounded-xl border-slate-300 focus:border-indigo-500 focus:ring-indigo-500"></textarea>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div>
+            <label for="who" class="block text-sm font-medium text-slate-700">Who is it from?</label>
+            <select id="who" class="w-full mt-1 rounded-xl border-slate-300 focus:border-indigo-500 focus:ring-indigo-500">
+              <option value="partner">Girlfriend/Boyfriend 💕</option>
+              <option value="friend">Friend 🤝</option>
+              <option value="family">Family 👨‍👩‍👧‍👦</option>
+              <option value="work">Colleague/Boss 💼</option>
+              <option value="other">Other / Stranger ✨</option>
+            </select>
+          </div>
+          <div>
+            <label for="mood" class="block text-sm font-medium text-slate-700">Mood / Tone</label>
+            <select id="mood" class="w-full mt-1 rounded-xl border-slate-300 focus:border-indigo-500 focus:ring-indigo-500">
+              <option value="polite">Polite</option>
+              <option value="funny">Funny</option>
+              <option value="witty">Witty</option>
+              <option value="serious">Serious</option>
+              <option value="romantic">Romantic</option>
+              <option value="flirty">Flirty</option>
+              <option value="empathetic">Empathetic</option>
+              <option value="savage">Savage (light)</option>
+            </select>
+          </div>
+          <div>
+            <label for="length" class="block text-sm font-medium text-slate-700">Reply length</label>
+            <select id="length" class="w-full mt-1 rounded-xl border-slate-300 focus:border-indigo-500 focus:ring-indigo-500">
+              <option value="short">Short</option>
+              <option value="medium" selected>Medium</option>
+              <option value="long">Long</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-3">
+          <button type="submit" class="inline-flex items-center justify-center rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 font-medium shadow-sm">Generate Replies</button>
+          <button type="button" id="sampleBtn" class="rounded-xl border border-slate-300 px-3 py-2 text-sm hover:bg-slate-50">Try a sample</button>
+          <span id="formNote" class="text-xs text-slate-500">No sign‑up required. Your text stays in your browser.</span>
+        </div>
+      </form>
+    </section>
+
+    <!-- Results -->
+    <section id="resultsSection" class="mt-6 hidden">
+      <div class="flex items-center justify-between mb-3">
+        <h3 class="text-lg font-semibold">Suggestions</h3>
+        <button id="copyAll" class="text-sm rounded-lg border border-slate-300 px-3 py-1 hover:bg-slate-50">Copy all</button>
+      </div>
+      <div id="results" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
+    </section>
+
+    <!-- (Optional) Ad area placeholder for later -->
+    <section class="mt-8">
+      <div class="rounded-2xl border border-dashed border-slate-300 p-4 text-center text-slate-500 text-sm">Ad space — add Google AdSense code here when approved.</div>
+    </section>
+  </main>
+
+  <footer class="max-w-5xl mx-auto px-4 pb-10 pt-4 text-center text-xs text-slate-500">
+    Built with ❤️ for quick, respectful texting. Please use kindly.
+  </footer>
+
+  <template id="cardTpl">
+    <article class="rounded-2xl bg-white border border-slate-200 shadow-sm p-4 flex flex-col gap-3">
+      <p class="text-slate-800 leading-relaxed"></p>
+      <div class="flex items-center gap-2">
+        <button class="copyBtn rounded-lg bg-slate-900 text-white text-sm px-3 py-1.5 hover:bg-slate-700">Copy</button>
+        <span class="text-xs text-slate-500"></span>
+      </div>
+    </article>
+  </template>
+
+  <script>
+    // Lightweight on-device templating (no backend, no API cost)
+    const openers = {
+      polite: ["Hey, thanks for checking in.", "Appreciate the message.", "Thanks for reaching out."],
+      funny: ["Plot twist: ", "Long story short—", "Okay, mini roast incoming 😂 "],
+      witty: ["Hot take:", "Real talk:", "Short answer:"],
+      serious: ["Let me be honest:", "To be straight with you:", "Truth is:"],
+      romantic: ["Sachi baat? You matter to me.", "Dil se: ", "Not gonna lie, I care a lot."],
+      flirty: ["If I say sorry, do I get a smile?", "I owe you a call and maybe coffee?", "Okay but hear me out… dinner?"] ,
+      empathetic: ["I get how that felt.", "You're right to ask.", "Thanks for being open about this."],
+      savage: ["Calm, Captain.", "Relax, detective.", "Easy there."]
+    };
+
+    const bridges = {
+      question: ["Here’s where I was:", "Quick context:", "What I can say is:"],
+      neutral: ["About that:", "So, here’s the deal:", "Context:"],
+      apology: ["I should’ve told you sooner.", "I dropped the ball.", "My bad on that."],
+    };
+
+    const closers = {
+      partner: [
+        "Won’t repeat this. Can we reset?",
+        "You matter — I’ll make it up to you.",
+        "Let’s talk when you’re free. I’m here."
+      ],
+      friend: [
+        "Tu bta, kal plan?",
+        "Scene on me next time.",
+        "Chal miltay hain jaldi."
+      ],
+      family: [
+        "Aap ki dua chahiye, theek kardunga.",
+        "Next time pehle batadoonga.",
+        "Shaam ko call karta hoon." 
+      ],
+      work: [
+        "I’ll keep you updated moving forward.",
+        "Let me share a new ETA in an hour.",
+        "Let’s align on next steps." 
+      ],
+      other: [
+        "Appreciate your patience.",
+        "Thanks for understanding.",
+        "Open to continue this nicely."
+      ]
+    };
+
+    const toneEmojis = {
+      polite: "🙏", funny: "😄", witty: "🧠", serious: "🧱", romantic: "💞", flirty: "😉", empathetic: "🤝", savage: "🔥"
+    };
+
+    const lenTargets = { short: 14, medium: 28, long: 44 }; // approximate word targets
+
+    function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+
+    function classify(msg){
+      const m = msg.toLowerCase();
+      const isQ = /\?|\b(why|kyo|kyun|how|kab|when|kahan|where)\b/.test(m);
+      const needsApology = /(late|didn'?t|did not|ignore|call|reply|text|message|waiting|mujhe|naraz|angry|upset)/.test(m);
+      if(isQ && needsApology) return 'questionApology';
+      if(isQ) return 'question';
+      if(needsApology) return 'apology';
+      return 'neutral';
+    }
+
+    function expandByLength(text, targetWords){
+      // Add small fillers to approach target length without sounding robotic
+      const fillers = [
+        " if I’m honest", " just to be clear", " tbh", " I mean", " seriously", " genuinely", " promise"
+      ];
+      let words = text.split(/\s+/);
+      while(words.length < targetWords){
+        const idx = Math.max(2, Math.min(words.length-1, Math.floor(Math.random()*words.length)));
+        words.splice(idx, 0, pick(fillers));
+      }
+      return words.join(' ').replace(/\s+/g,' ').trim();
+    }
+
+    function craftReplies(msg, who, mood, length){
+      const bucket = classify(msg);
+      const opener = pick(openers[mood] || openers.polite);
+      let bridge;
+      if(bucket === 'question') bridge = pick(bridges.question);
+      else if(bucket === 'apology') bridge = pick(bridges.apology);
+      else if(bucket === 'questionApology') bridge = pick([...bridges.question, ...bridges.apology]);
+      else bridge = pick(bridges.neutral);
+      const closer = pick(closers[who] || closers.other);
+
+      // Bodies calibrated by tone
+      const bodies = {
+        polite: [
+          "I should’ve replied sooner.",
+          "I wasn’t available for a bit but I’m here now.",
+          "Didn’t mean to worry you — thanks for checking."
+        ],
+        funny: [
+          "my phone decided to take a power nap.",
+          "I was stuck in a plot hole called ‘life’.",
+          "my attention span went on a chai break."
+        ],
+        witty: [
+          "silence wasn’t the best strategy — updating now.",
+          "data received, sending a better response.",
+          "let’s convert confusion to clarity in 3…2…1."
+        ],
+        serious: [
+          "I should’ve communicated earlier.",
+          "I take responsibility for the delay.",
+          "Let me address this properly."
+        ],
+        romantic: [
+          "I messed up, and I hate that it made you feel bad.",
+          "You were on my mind, bas time haath se nikal gaya.",
+          "Let me make it up to you — properly."
+        ],
+        flirty: [
+          "punishment accepted — coffee with you?",
+          "I owe you a call and a smile.",
+          "okay but can I redeem this with a cute plan?"
+        ],
+        empathetic: [
+          "I get why you felt that way.",
+          "Thanks for telling me — means a lot.",
+          "Your feelings are valid, and I’m listening."
+        ],
+        savage: [
+          "I reply slow, not never.",
+          "Relax — we’re good.",
+          "Let’s keep it chill, not dramatic."
+        ]
+      };
+
+      const target = lenTargets[length] || lenTargets.medium;
+
+      // Create 4 styled variants
+      const variants = [];
+      const emoji = toneEmojis[mood] || "";
+
+      const base = `${opener} ${bridge} ${pick(bodies[mood])} ${closer}`;
+      variants.push(expandByLength(base, target));
+
+      const concise = `${opener} ${pick(bodies[mood])} ${closer}`;
+      variants.push(expandByLength(concise, Math.max(10, Math.round(target*0.7))));
+
+      const direct = `Look, ${pick(bodies.serious)} ${closer}`;
+      variants.push(expandByLength(direct, Math.max(10, Math.round(target*0.8))));
+
+      const desi = `Suno, ${pick(bodies.empathetic)} ${closer}`;
+      variants.push(expandByLength(desi, Math.max(10, Math.round(target*0.9))));
+
+      return variants.map(v => (emoji ? (emoji + " " + v) : v));
+    }
+
+    function renderResults(list){
+      const section = document.getElementById('resultsSection');
+      const grid = document.getElementById('results');
+      const tpl = document.getElementById('cardTpl');
+      grid.innerHTML = '';
+      list.forEach((text, i) => {
+        const node = tpl.content.cloneNode(true);
+        node.querySelector('p').textContent = text;
+        node.querySelector('span').textContent = `Suggestion ${i+1}`;
+        node.querySelector('.copyBtn').addEventListener('click', async () => {
+          await navigator.clipboard.writeText(text);
+          toast('Copied');
+        });
+        grid.appendChild(node);
+      });
+      section.classList.remove('hidden');
+      section.scrollIntoView({behavior:'smooth'});
+    }
+
+    function toast(msg){
+      let t = document.getElementById('toast');
+      if(!t){
+        t = document.createElement('div');
+        t.id = 'toast';
+        t.className = 'fixed bottom-4 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-sm px-3 py-2 rounded-lg shadow-lg';
+        document.body.appendChild(t);
+      }
+      t.textContent = msg;
+      t.style.opacity = '1';
+      setTimeout(()=>{ t.style.opacity='0'; }, 1200);
+    }
+
+    document.getElementById('replyForm').addEventListener('submit', (e)=>{
+      e.preventDefault();
+      const msg = document.getElementById('inputMsg').value.trim();
+      const who = document.getElementById('who').value;
+      const mood = document.getElementById('mood').value;
+      const length = document.getElementById('length').value;
+      if(!msg){ toast('Please paste a message first'); return; }
+      const replies = craftReplies(msg, who, mood, length);
+      renderResults(replies);
+    });
+
+    document.getElementById('sampleBtn').addEventListener('click', ()=>{
+      document.getElementById('inputMsg').value = "Why didn’t you call me last night?";
+      document.getElementById('who').value = 'partner';
+      document.getElementById('mood').value = 'romantic';
+      document.getElementById('length').value = 'medium';
+      document.getElementById('replyForm').dispatchEvent(new Event('submit'));
+    });
+
+    document.getElementById('copyAll').addEventListener('click', async ()=>{
+      const texts = [...document.querySelectorAll('#results p')].map(p=>p.textContent).join('\n\n');
+      if(texts){ await navigator.clipboard.writeText(texts); toast('All copied'); }
+    });
+  </script>
+</body>
+</html>
