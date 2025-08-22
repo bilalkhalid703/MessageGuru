@@ -1,0 +1,37 @@
+I want to deploy this  on Vercel, but right now my repo is messy (everything is in one place and the browser just dumps TypeScript/Node code). I need you to restructure it properly and make all the changes needed.
+
+Here’s what I want you to do step by step:
+
+1. **Separate frontend and backend:**
+   - Create a `/frontend` folder that contains the website UI (HTML, CSS, JS, React if needed).
+   - Create a `/backend` folder with a simple Node.js + Express (or similar) server to handle API requests.
+   - The frontend should call the backend for AI responses.
+
+2. **Frontend setup:**
+   - If using plain HTML/JS, add an `index.html` inside `/frontend/public/`.
+   - If using React, set up a proper `package.json`, `src/` folder, and React entry point.
+   - Ensure it builds into `/frontend/dist` (or `/build`).
+
+3. **Backend setup:**
+   - Create a `server.js` inside `/backend/`.
+   - This should run an Express server with one `/api/ask` route.
+   - Inside that route, integrate a free AI API (like Hugging Face Inference API or OpenAI-compatible free endpoint).
+   - Return JSON responses to the frontend.
+
+4. **Root level config:**
+   - At the project root, keep a `package.json` for managing scripts.
+   - Add scripts like:
+     - `"dev": "concurrently \"npm run dev --prefix frontend\" \"npm run dev --prefix backend\""`
+     - `"build": "npm run build --prefix frontend"`
+   - Install `concurrently` and `nodemon` as dev dependencies.
+
+5. **Deployment setup:**
+   - For **Vercel**:  
+     - Move `/frontend` as the main app.  
+     - Add `vercel.json` at root to tell Vercel to build frontend and route API requests to `/backend`.  
+   
+6. **GitHub readiness:**
+   - Make sure `.gitignore` excludes `node_modules` and build artifacts.
+   - Ensure `README.md` explains how to run locally (`npm install`, `npm run dev`).
+
+Finally, refactor my repo so it works with `npm run dev` locally and can be deployed on Vercel or Netlify without errors. Make sure to use the correct folder structure, scripts, and configs.
